@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoring Gas - Kamar Mandi Sekolah</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --secondary: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+            --gray: #95a5a6;
+            --white: #ffffff;
+            --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: var(--white);
+            padding: 25px 0;
+            border-radius: var(--radius);
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIvPjwvc3ZnPg==');
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            font-size: 3rem;
+            margin-right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .status-card {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px 30px;
+            background: linear-gradient(135deg, var(--white) 0%, #f8f9fa 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .status-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--secondary);
+        }
+        
+        .sensor-value-container {
+            position: relative;
+            display: inline-block;
+            margin: 20px 0;
+        }
+        
+        .sensor-value {
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .sensor-unit {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--gray);
+            margin-left: 5px;
+        }
+        
+        .gauge-container {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+        
+        .gauge {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: conic-gradient(
+                var(--secondary) 0% 30%,
+                var(--warning) 30% 70%,
+                var(--danger) 70% 100%
+            );
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .gauge-inner {
+            width: 70%;
+            height: 70%;
+            background: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.5rem;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .status-indicator {
+            display: inline-block;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+        }
+        
+        .status-aman {
+            background-color: var(--secondary);
+            color: var(--white);
+        }
+        
+        .status-warning {
+            background-color: var(--warning);
+            color: var(--white);
+        }
+        
+        .status-bahaya {
+            background-color: var(--danger);
+            color: var(--white);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(231, 76, 60, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(231, 76, 60, 0); }
+        }
+        
+        .card-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+            border-bottom: 2px solid var(--light);
+            padding-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card-title i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+        
+        .control-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--light);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        input[type="number"]:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 12px;
+        }
+        
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: var(--white);
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+        
+        .btn-success {
+            background-color: var(--secondary);
+            color: var(--white);
+        }
+        
+        .btn-success:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+        }
+        
+        .info-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 5px solid var(--primary);
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 0 var(--radius) var(--radius) 0;
+            box-shadow: var(--shadow);
+        }
+        
+        .info-title {
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .connection-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+        }
+        
+        .connection-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--secondary);
+        }
+        
+        .connection-dot.disconnected {
+            background: var(--danger);
+        }
+        
+        .history-card {
+            grid-column: 1 / -1;
+        }
+        
+        .history-chart {
+            height: 200px;
+            background: var(--light);
+            border-radius: 8px;
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .chart-bar {
+            position: absolute;
+            bottom: 0;
+            width: 30px;
+            background: var(--primary);
+            border-radius: 4px 4px 0 0;
+            transition: var(--transition);
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--gray);
+            font-size: 0.9rem;
+            padding: 20px 0;
+            border-top: 1px solid var(--light);
+        }
+        
+        @media (max-width: 900px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+            }
+            
+            .connection-status {
+                margin-top: 10px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .gauge-container {
+                width: 150px;
+                height: 150px;
+            }
+            
+            .sensor-value {
+                font-size: 3.5rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-wind fa-2x"></i>
+                    </div>
+                    <div>
+                        <h1>Monitoring Gas Kamar Mandi</h1>
+                        <div class="subtitle">Sistem Keamanan Sekolah Cerdas</div>
+                    </div>
+                </div>
+                <div id="connection-status" class="connection-status">
+                    <div class="connection-dot"></div>
+                    <span>Terhubung</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="card status-card">
+                <h2 class="card-title"><i class="fas fa-chart-line"></i> Status Sensor Gas</h2>
+                <div class="gauge-container">
+                    <div class="gauge">
+                        <div class="gauge-inner">
+                            <span id="gauge-value">0</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="sensor-value-container">
+                    <span id="sensor-value" class="sensor-value">0</span>
+                    <span class="sensor-unit">ppm</span>
+                </div>
+                <div id="status-indicator" class="status-indicator status-aman">
+                    <i class="fas fa-check-circle"></i> AMAN
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-sliders-h"></i> Pengaturan Threshold</h2>
+                <div class="control-group">
+                    <label for="threshold-input">Nilai Batas Aman:</label>
+                    <input type="number" id="threshold-input" value="2500" min="0" max="4095">
+                </div>
+                <button id="update-threshold" class="btn-primary">
+                    <i class="fas fa-sync-alt"></i> Perbarui Threshold
+                </button>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title"><i class="fas fa-volume-up"></i> Kontrol Buzzer</h2>
+                <div class="button-group">
+                    <button id="buzzer-on" class="btn-danger">
+                        <i class="fas fa-play"></i> Aktifkan Buzzer
+                    </button>
+                    <button id="buzzer-off" class="btn-success">
+                        <i class="fas fa-stop"></i> Matikan Buzzer
+                    </button>
+                </div>
+                <div id="buzzer-status" style="margin-top: 15px; text-align: center; font-weight: 600;">
+                    Status: <span id="buzzer-state" style="color: var(--secondary);">Mati</span>
+                </div>
+            </div>
+            
+            <div class="card history-card">
+                <h2 class="card-title"><i class="fas fa-history"></i> Riwayat Pembacaan</h2>
+                <div class="history-chart" id="history-chart">
+                    <!-- Chart bars will be generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <div class="info-title">
+                <i class="fas fa-info-circle"></i> Informasi Sistem
+            </div>
+            <p>Sistem ini memantau kadar gas di kamar mandi sekolah. Jika kadar gas melebihi batas aman, buzzer akan berbunyi otomatis untuk memberikan peringatan. Sistem terhubung dengan sensor MQ-2 untuk mendeteksi gas mudah terbakar dan asap.</p>
+        </div>
+        
+        <footer>
+            <p>&copy; 2023 Sistem Monitoring Sekolah | SMK Example</p>
+        </footer>
+    </div>
+
+    <script>
+        // Elemen DOM
+        const sensorValueElement = document.getElementById('sensor-value');
+        const gaugeValueElement = document.getElementById('gauge-value');
+        const statusIndicatorElement = document.getElementById('status-indicator');
+        const thresholdInputElement = document.getElementById('threshold-input');
+        const updateThresholdButton = document.getElementById('update-threshold');
+        const buzzerOnButton = document.getElementById('buzzer-on');
+        const buzzerOffButton = document.getElementById('buzzer-off');
+        const buzzerStateElement = document.getElementById('buzzer-state');
+        const connectionStatusElement = document.getElementById('connection-status');
+        const connectionDotElement = connectionStatusElement.querySelector('.connection-dot');
+        const historyChartElement = document.getElementById('history-chart');
+        
+        // Variabel
+        let currentThreshold = 2500;
+        let sensorHistory = [];
+        
+        // Fungsi untuk mengambil data sensor dari ESP32
+        async function fetchSensorData() {
+            try {
+                const response = await fetch('/api/sensor');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                
+                // Update tampilan dengan data aktual dari ESP32
+                sensorValueElement.textContent = data.value;
+                gaugeValueElement.textContent = data.value;
+                currentThreshold = data.threshold;
+                thresholdInputElement.value = data.threshold;
+                
+                // Update status indikator berdasarkan data aktual
+                if (data.status === 'Aman') {
+                    statusIndicatorElement.innerHTML = '<i class="fas fa-check-circle"></i> AMAN';
+                    statusIndicatorElement.className = 'status-indicator status-aman';
+                } else {
+                    statusIndicatorElement.innerHTML = '<i class="fas fa-exclamation-triangle"></i> BAHAYA!';
+                    statusIndicatorElement.className = 'status-indicator status-bahaya';
+                }
+                
+                // Update status buzzer
+                buzzerStateElement.textContent = data.buzzer_active ? 'Aktif' : 'Mati';
+                buzzerStateElement.style.color = data.buzzer_active ? 'var(--danger)' : 'var(--secondary)';
+                
+                // Update status koneksi
+                connectionStatusElement.querySelector('span').textContent = 'Terhubung';
+                connectionDotElement.classList.remove('disconnected');
+                
+                // Update grafik riwayat
+                updateHistoryChart(data.value);
+                
+            } catch (error) {
+                console.error('Gagal mengambil data sensor:', error);
+                connectionStatusElement.querySelector('span').textContent = 'Terputus';
+                connectionDotElement.classList.add('disconnected');
+            }
+        }
+        
+        // Fungsi untuk membuat grafik riwayat
+        function updateHistoryChart(newValue) {
+            historyChartElement.innerHTML = '';
+            
+            // Tambahkan data baru dan hapus yang lama jika sudah lebih dari 10
+            sensorHistory.push(newValue);
+            if (sensorHistory.length > 10) {
+                sensorHistory.shift();
+            }
+            
+            // Buat elemen chart
+            const maxValue = Math.max(...sensorHistory, currentThreshold);
+            const chartWidth = historyChartElement.offsetWidth;
+            const barWidth = (chartWidth - 100) / 10;
+            
+            sensorHistory.forEach((value, index) => {
+                const barHeight = (value / maxValue) * 180;
+                const bar = document.createElement('div');
+                bar.className = 'chart-bar';
+                bar.style.height = `${barHeight}px`;
+                bar.style.left = `${50 + (index * barWidth)}px`;
+                bar.style.width = `${barWidth - 5}px`;
+                
+                // Warna berdasarkan nilai
+                if (value < currentThreshold * 0.7) {
+                    bar.style.backgroundColor = 'var(--secondary)';
+                } else if (value < currentThreshold) {
+                    bar.style.backgroundColor = 'var(--warning)';
+                } else {
+                    bar.style.backgroundColor = 'var(--danger)';
+                }
+                
+                historyChartElement.appendChild(bar);
+            });
+        }
+        
+        // Fungsi untuk memperbarui threshold di ESP32
+        async function updateThreshold() {
+            const newThreshold = parseInt(thresholdInputElement.value);
+            
+            if (isNaN(newThreshold) || newThreshold < 0 || newThreshold > 4095) {
+                alert('Masukkan nilai threshold yang valid (0-4095)');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/threshold', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ threshold: newThreshold })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const result = await response.json();
+                alert('Threshold berhasil diperbarui');
+                
+                // Refresh data untuk mendapatkan status terbaru
+                fetchSensorData();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat memperbarui threshold');
+            }
+        }
+        
+        // Fungsi untuk mengontrol buzzer di ESP32
+        async function controlBuzzer(action) {
+            try {
+                const response = await fetch('/api/buzzer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ action: action })
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const result = await response.json();
+                alert(`Buzzer berhasil ${action === 'on' ? 'diaktifkan' : 'dimatikan'}`);
+                
+                // Refresh data untuk mendapatkan status terbaru
+                fetchSensorData();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat mengontrol buzzer');
+            }
+        }
+        
+        // Event listeners
+        updateThresholdButton.addEventListener('click', updateThreshold);
+        buzzerOnButton.addEventListener('click', () => controlBuzzer('on'));
+        buzzerOffButton.addEventListener('click', () => controlBuzzer('off'));
+        
+        // Memuat data pertama kali
+        fetchSensorData();
+        
+        // Memperbarui data setiap 2 detik
+        setInterval(fetchSensorData, 2000);
+    </script>
+</body>
+</html>
